@@ -46,6 +46,22 @@ public class Customer {
         this.address = address;
     }
 
+    public void setProfile(UserProfile profile) {
+        if (this.profile == profile) {
+            return;
+        }
+
+        if (this.profile != null) {
+            this.profile.setCustomer(null);
+        }
+
+        this.profile = profile;
+
+        if (profile != null) {
+            profile.setCustomer(this);
+        }
+    }
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = Instant.now();
