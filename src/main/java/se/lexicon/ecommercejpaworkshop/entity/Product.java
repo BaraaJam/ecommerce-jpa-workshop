@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "category")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "products")
@@ -25,4 +25,8 @@ public class Product {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

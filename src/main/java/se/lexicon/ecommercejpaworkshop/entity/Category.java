@@ -3,11 +3,14 @@ package se.lexicon.ecommercejpaworkshop.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "products")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "categories")
@@ -24,4 +27,7 @@ public class Category {
     public Category(String name) {
         this.name = name;
     }
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products = new ArrayList<>();
 }
