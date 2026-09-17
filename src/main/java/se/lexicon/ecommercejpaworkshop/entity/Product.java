@@ -5,13 +5,15 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "category")
+@ToString(exclude = {"category", "promotions"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "products")
@@ -39,6 +41,14 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "products_promotions",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "promotion_id")
+    )
+    private Set<Promotion> promotions = new HashSet<>();
+
     public Product(String name, BigDecimal price) {
         this.name = name;
         this.price = price;
@@ -48,5 +58,23 @@ public class Product {
         this.name = name;
         this.price = price;
         this.category = category;
+    }
+
+    public void addPromotion(Promotion promotion) {
+        if (promotion == null) {
+            throw new IllegalArgumentException("Promotion cannot be null");
+        }
+        if (this.promotions.add(promotion)) {
+            promotion.getProducts().add(this);
+        }
+    }
+
+    public void removePromotion(Promotion promotion) {
+        if (promotion == null) {
+            throw new IllegalArgumentException("Promotion cannot be null");
+        }
+        if (this.promotions.remove(promotion)) {
+            promotion.getProducts().remove(this);
+        }
     }
 }

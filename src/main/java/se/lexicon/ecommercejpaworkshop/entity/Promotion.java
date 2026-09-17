@@ -5,13 +5,15 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = {"products"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "promotions")
@@ -29,6 +31,9 @@ public class Promotion {
 
     @Column(nullable = false)
     private LocalDate endDate;
+
+    @ManyToMany(mappedBy = "promotions")
+    private Set<Product> products = new HashSet<>();
 
     public Promotion(String code, LocalDate startDate, LocalDate endDate) {
         this.code = code;
