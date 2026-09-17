@@ -30,4 +30,18 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Product> products = new ArrayList<>();
+
+    public void addProduct(Product product) {
+        if (product != null) {
+            this.products.add(product);
+            product.setCategory(this);
+        }
+    }
+
+    public void removeProduct(Product product) {
+        if (product != null) {
+            this.products.remove(product);
+            product.setCategory(null);
+        }
+    }
 }
