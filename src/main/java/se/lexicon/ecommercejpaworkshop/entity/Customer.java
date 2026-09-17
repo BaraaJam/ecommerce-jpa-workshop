@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"profile"})
+@ToString(exclude = {"profile", "orders"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "customers")
@@ -39,11 +41,19 @@ public class Customer {
     @JoinColumn(name = "profile_id")
     private UserProfile profile;
 
+    @OneToMany(mappedBy = "customer")
+    private List<Order> orders =  new ArrayList<>();
+
     public Customer(String firstName, String lastName, String email, Address address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.address = address;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = Instant.now();
     }
 
     public void setProfile(UserProfile profile) {
@@ -62,9 +72,22 @@ public class Customer {
         }
     }
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = Instant.now();
+    public void addOrder(Order order) {
+        if  (order == null) {
+            throw new IllegalArgumentException("Order cannot be null");
+        }
+        if (!this.orders.contains(order)) {
+            this.orders.add(order);
+            order.setCustomer(this);
+        }
     }
 
+    public void removeOrder(Order order) {
+        if (order == null) {
+            throw new IllegalArgumentException("Order cannot be null");
+        }
+        if (this.orders.remove(order)) {
+            order.setCustomer(null);
+        }
+    }
 }

@@ -6,15 +6,13 @@ import lombok.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "orderItems")
+@ToString(exclude = {"orderItems", "customer"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "orders")
@@ -33,6 +31,10 @@ public class Order {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems =  new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     public Order(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
@@ -71,5 +73,4 @@ public class Order {
             orderItem.setOrder(null);
         }
     }
-
 }
