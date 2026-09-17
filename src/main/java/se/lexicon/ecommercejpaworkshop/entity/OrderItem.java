@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "order")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "order_items")
@@ -27,4 +27,13 @@ public class OrderItem {
 
     @Column(nullable = false, precision = 10 , scale = 2)
     private BigDecimal priceAtPurchase;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    public OrderItem(Integer quantity, BigDecimal priceAtPurchase) {
+        this.quantity = quantity;
+        this.priceAtPurchase = priceAtPurchase;
+    }
 }
