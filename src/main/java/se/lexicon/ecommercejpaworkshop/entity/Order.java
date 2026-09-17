@@ -26,7 +26,7 @@ public class Order {
     private Instant orderDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private OrderStatus orderStatus;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order",  cascade = CascadeType.ALL, orphanRemoval = true)
