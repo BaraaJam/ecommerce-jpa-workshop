@@ -32,15 +32,20 @@ public class Category {
     private List<Product> products = new ArrayList<>();
 
     public void addProduct(Product product) {
-        if (product != null) {
+        if (product == null) {
+            throw new IllegalArgumentException("Product cannot be null");
+        }
+        if (!this.products.contains(product)) {
             this.products.add(product);
             product.setCategory(this);
         }
     }
 
     public void removeProduct(Product product) {
-        if (product != null) {
-            this.products.remove(product);
+        if (product == null) {
+            throw new IllegalArgumentException("Product cannot be null");
+        }
+        if (this.products.remove(product)) {
             product.setCategory(null);
         }
     }
